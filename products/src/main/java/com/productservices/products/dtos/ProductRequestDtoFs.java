@@ -1,6 +1,6 @@
 package com.productservices.products.dtos;
 
-public class ProductRequestDto {
+public class ProductRequestDtoFs {
 
     private String title;
     private float price;

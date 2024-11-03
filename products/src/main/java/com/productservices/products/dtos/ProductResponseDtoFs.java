@@ -1,12 +1,11 @@
 package com.productservices.products.dtos;
 
-import com.productservices.products.models.Category;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductResponseDto {
+public class ProductResponseDtoFs {
     private Long id;
     private String title;
     private float price;

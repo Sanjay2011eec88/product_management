@@ -1,11 +1,13 @@
 package com.productservices.products.controllers;
 
-import com.productservices.products.dtos.ProductRequestDto;
-import com.productservices.products.models.Category;
+import com.productservices.products.dtos.ProductRequestDtoFs;
+import com.productservices.products.dtos.ProductResponseSelf;
+import com.productservices.products.exception.ProductNotPresentException;
 import com.productservices.products.models.Product;
 import com.productservices.products.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -23,9 +25,16 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public Product getProductDetails(@PathVariable Long id){
-        return productService.getSingleProduct(id);
+    public ResponseEntity<ProductResponseSelf   > getProductDetails(@PathVariable Long id) throws ProductNotPresentException {
+        Product product;
+        product = productService.getSingleProduct(id);
+
+        return new ResponseEntity<>(
+                new ProductResponseSelf(product, "success"),
+                HttpStatus.OK);
     }
+
+
 
     @GetMapping("/products/categories/{id}")
     public List<Product> getAllProductsInCategories(@PathVariable Long id){
@@ -33,12 +42,12 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product addProduct(@RequestBody ProductRequestDto requestDto){
+    public Product addProduct(@RequestBody ProductRequestDtoFs requestDto){
         return new Product();
     }
 
     @PatchMapping("/products")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequestDto requestDto){
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequestDtoFs requestDto){
         return new Product();
     }
 

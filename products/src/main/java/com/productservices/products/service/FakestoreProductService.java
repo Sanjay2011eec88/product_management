@@ -1,6 +1,7 @@
 package com.productservices.products.service;
 
-import com.productservices.products.dtos.ProductResponseDto;
+import com.productservices.products.dtos.ProductResponseDtoFs;
+import com.productservices.products.exception.ProductNotPresentException;
 import com.productservices.products.models.Category;
 import com.productservices.products.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,29 +20,31 @@ public class FakestoreProductService implements IProductService {
     RestTemplate restTemplate;
 
     @Override
-    public Product getSingleProduct(Long Id) {
-        RestTemplate restTemplate = new RestTemplate();
+    public Product getSingleProduct(Long Id) throws ProductNotPresentException {
+        if(Id > 20 && Id < 40){
+            throw new ProductNotPresentException();
+        }
         //Takes in the API and the dto class and calls the url
-        ProductResponseDto response = restTemplate.getForObject(
+        ProductResponseDtoFs response = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + Id,
-                ProductResponseDto.class);
+                ProductResponseDtoFs.class);
 
         return getProdcutFromResponseDTO(response);
     }
 
     @Override
     public List<Product> getAllProducts() {
-        ProductResponseDto[] products = restTemplate.getForObject(
+        ProductResponseDtoFs[] products = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/",
-                ProductResponseDto[].class);
+                ProductResponseDtoFs[].class);
         List<Product> productList = new ArrayList<>();
-        for (ProductResponseDto product : products) {
+        for (ProductResponseDtoFs product : products) {
             productList.add(getProdcutFromResponseDTO(product));
         }
         return productList;
     }
 
-    private Product getProdcutFromResponseDTO(ProductResponseDto response) {
+    private Product getProdcutFromResponseDTO(ProductResponseDtoFs response) {
         Product product = new Product();
         product.setId(response.getId());
         product.setName(response.getTitle());
